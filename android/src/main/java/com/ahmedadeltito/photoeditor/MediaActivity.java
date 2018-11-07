@@ -32,7 +32,7 @@ public abstract class MediaActivity extends BaseActivity {
                         || requestCode == GALLERY_KITKAT_INTENT_CALLED) {
                     if (requestCode == GALLERY_INTENT_CALLED) {
                         selectedImageUri = data.getData();
-                        selectedImagePath = getPath(selectedImageUri);
+                        selectedImagePath = UtilFunctions.getPath(this, selectedImageUri);
                     } else if (requestCode == GALLERY_KITKAT_INTENT_CALLED) {
                         selectedImageUri = data.getData();
                         final int takeFlags = data.getFlags()
@@ -41,7 +41,7 @@ public abstract class MediaActivity extends BaseActivity {
                         if (selectedImageUri != null) {
                             getContentResolver().takePersistableUriPermission(
                                     selectedImageUri, takeFlags);
-                            selectedImagePath = getPath(selectedImageUri);
+                            selectedImagePath = UtilFunctions.getPath(this, selectedImageUri);
                         }
                     } else {
                         selectedImagePath = selectedOutputPath;

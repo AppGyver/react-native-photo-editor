@@ -108,7 +108,8 @@ public class PhotoEditorActivity extends AppCompatActivity implements View.OnCli
 
         try {
             Uri path = Uri.parse(selectedImagePath);
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), path);
+            String uriString = UtilFunctions.getPath(this, path);
+            Bitmap bitmap = BitmapFactory.decodeFile(uriString, options);
             photoEditImageView.setImageBitmap(bitmap);
         } catch (Exception e) {
             Log.e("Error parsing Bitmap", e.getMessage());
@@ -400,8 +401,8 @@ public class PhotoEditorActivity extends AppCompatActivity implements View.OnCli
                 String imageName = "IMG_" + timeStamp + ".jpg";
 
                 String selectedImagePath = getIntent().getExtras().getString("selectedImagePath");
-                Uri uri = Uri.parse(selectedImagePath);
-                File file = new File(uri.getPath());
+                String uriString = UtilFunctions.getPath(PhotoEditorActivity.this, Uri.parse(selectedImagePath));
+                File file = new File(uriString);
 
                 try {
                     FileOutputStream out = new FileOutputStream(file);
