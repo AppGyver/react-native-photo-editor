@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -27,7 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import android.net.Uri;
 import com.ahmedadeltito.photoeditor.widget.SlidingUpPanelLayout;
 import com.ahmedadeltito.photoeditorsdk.BrushDrawingView;
 import com.ahmedadeltito.photoeditorsdk.OnPhotoEditorSDKListener;
@@ -72,7 +73,7 @@ public class PhotoEditorActivity extends AppCompatActivity implements View.OnCli
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 1;
-        Bitmap bitmap = BitmapFactory.decodeFile(selectedImagePath, options);
+
 
         Typeface newFont = getFontFromRes(R.raw.eventtusicons);
         emojiFont = getFontFromRes(R.raw.emojioneandroid);
@@ -105,7 +106,13 @@ public class PhotoEditorActivity extends AppCompatActivity implements View.OnCli
         ViewPager pager = (ViewPager) findViewById(R.id.image_emoji_view_pager);
         PageIndicator indicator = (PageIndicator) findViewById(R.id.image_emoji_indicator);
 
-        photoEditImageView.setImageBitmap(bitmap);
+        try {
+            Uri path = Uri.parse(selectedImagePath);
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), path);
+            photoEditImageView.setImageBitmap(bitmap);
+        } catch (Exception e) {
+            Log.e("Error parsing Bitmap", e.getMessage());
+        }
 
         closeTextView.setTypeface(newFont);
         addTextView.setTypeface(newFont);
@@ -393,7 +400,8 @@ public class PhotoEditorActivity extends AppCompatActivity implements View.OnCli
                 String imageName = "IMG_" + timeStamp + ".jpg";
 
                 String selectedImagePath = getIntent().getExtras().getString("selectedImagePath");
-                File file = new File(selectedImagePath);
+                Uri uri = Uri.parse(selectedImagePath);
+                File file = new File(uri.getPath());
 
                 try {
                     FileOutputStream out = new FileOutputStream(file);
@@ -405,6 +413,7 @@ public class PhotoEditorActivity extends AppCompatActivity implements View.OnCli
                     out.flush();
                     out.close();
                 } catch (Exception var7) {
+                    Log.e("onFinish URI", var7.getMessage());
                     var7.printStackTrace();
                 }
 
