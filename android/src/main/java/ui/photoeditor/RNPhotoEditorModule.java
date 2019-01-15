@@ -1,4 +1,3 @@
-
 package ui.photoeditor;
 
 import com.ahmedadeltito.photoeditor.PhotoEditorActivity;
@@ -11,7 +10,6 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 
-import android.util.Log;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -20,7 +18,7 @@ import java.util.ArrayList;
 
 public class RNPhotoEditorModule extends ReactContextBaseJavaModule {
 
-  private static final int PHOTO_EDITOR_REQUEST = 1;
+  private static final int PHOTO_EDITOR_REQUEST = 1539266202;
   private static final String E_PHOTO_EDITOR_CANCELLED = "E_PHOTO_EDITOR_CANCELLED";
 
 
@@ -36,9 +34,9 @@ public class RNPhotoEditorModule extends ReactContextBaseJavaModule {
         if (mDoneCallback != null) {
 
           if (resultCode == Activity.RESULT_CANCELED) {
-            mCancelCallback.invoke();
+            mCancelCallback.invoke(resultCode);
           } else {
-            mDoneCallback.invoke();
+            mDoneCallback.invoke(intent.getExtras().getString("imagePath"));
           }
 
         }

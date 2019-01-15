@@ -112,7 +112,8 @@ public class PhotoEditorActivity extends AppCompatActivity implements View.OnCli
 
         try {
             Uri path = Uri.parse(selectedImagePath);
-            String uriString = UtilFunctions.getPath(this, path);
+            String parsedPath = UtilFunctions.getPath(this, path);
+            String uriString = null != parsedPath ? parsedPath : path.toString();
             Bitmap bitmap = BitmapFactory.decodeFile(uriString, options);
             photoEditImageView.setImageBitmap(bitmap);
         } catch (Exception e) {
@@ -405,7 +406,8 @@ public class PhotoEditorActivity extends AppCompatActivity implements View.OnCli
                 String imageName = "IMG_" + timeStamp + ".jpg";
 
                 String selectedImagePath = getIntent().getExtras().getString("selectedImagePath");
-                String uriString = UtilFunctions.getPath(PhotoEditorActivity.this, Uri.parse(selectedImagePath));
+                String parsedPath = UtilFunctions.getPath(PhotoEditorActivity.this, Uri.parse(selectedImagePath));
+                String uriString = null != parsedPath ? parsedPath : selectedImagePath;
                 File file = new File(uriString);
 
                 try {
@@ -423,6 +425,7 @@ public class PhotoEditorActivity extends AppCompatActivity implements View.OnCli
                 }
 
                 Intent returnIntent = new Intent();
+                returnIntent.putExtra("imagePath", uriString);
                 setResult(Activity.RESULT_OK, returnIntent);
 
                 finish();
