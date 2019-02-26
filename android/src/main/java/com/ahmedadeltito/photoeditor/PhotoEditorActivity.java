@@ -29,6 +29,8 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.net.Uri;
+import android.view.WindowManager;
+
 import com.ahmedadeltito.photoeditor.widget.SlidingUpPanelLayout;
 import com.ahmedadeltito.photoeditorsdk.BrushDrawingView;
 import com.ahmedadeltito.photoeditorsdk.OnPhotoEditorSDKListener;
@@ -69,6 +71,8 @@ public class PhotoEditorActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_editor);
 
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
         String selectedImagePath = getIntent().getExtras().getString("selectedImagePath");
 
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -108,7 +112,8 @@ public class PhotoEditorActivity extends AppCompatActivity implements View.OnCli
 
         try {
             Uri path = Uri.parse(selectedImagePath);
-            String uriString = UtilFunctions.getPath(this, path);
+            String parsedPath = UtilFunctions.getPath(this, path);
+            String uriString = null != parsedPath ? parsedPath : path.toString();
             Bitmap bitmap = BitmapFactory.decodeFile(uriString, options);
             photoEditImageView.setImageBitmap(bitmap);
         } catch (Exception e) {
@@ -401,7 +406,8 @@ public class PhotoEditorActivity extends AppCompatActivity implements View.OnCli
                 String imageName = "IMG_" + timeStamp + ".jpg";
 
                 String selectedImagePath = getIntent().getExtras().getString("selectedImagePath");
-                String uriString = UtilFunctions.getPath(PhotoEditorActivity.this, Uri.parse(selectedImagePath));
+                String parsedPath = UtilFunctions.getPath(PhotoEditorActivity.this, Uri.parse(selectedImagePath));
+                String uriString = null != parsedPath ? parsedPath : selectedImagePath;
                 File file = new File(uriString);
 
                 try {
@@ -419,6 +425,7 @@ public class PhotoEditorActivity extends AppCompatActivity implements View.OnCli
                 }
 
                 Intent returnIntent = new Intent();
+                returnIntent.putExtra("imagePath", uriString);
                 setResult(Activity.RESULT_OK, returnIntent);
 
                 finish();
