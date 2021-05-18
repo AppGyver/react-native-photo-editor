@@ -80,6 +80,10 @@ RCT_EXPORT_METHOD(Edit:(nonnull NSDictionary *)props onDone:(RCTResponseSenderBl
         
         photoEditor.colors = passColors;
 
+        if (@available(iOS 13, *)) {
+           [photoEditor setModalPresentationStyle: UIModalPresentationFullScreen];
+        }
+        
         // Invoke Editor
         photoEditor.photoEditorDelegate = self;
 
